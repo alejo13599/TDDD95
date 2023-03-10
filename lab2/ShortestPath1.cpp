@@ -14,7 +14,6 @@
 
 using namespace std;
 const int INF = 1000000000;
-vector<pair<int, int>> edges = {};
 vector<vector<pair<int, int>>> adj;
 int N; //Number of nodes in graph.
 int M; //Number of edges.
@@ -28,10 +27,14 @@ vector<int> d;
 vector<int> p;
 vector<int> restoredPath = {};
 
-
-
+// Function for the djikstra algortihm.
+//Inputs:
+//s: The starting node. Djikstra calculate the distance from this node to every other node.
+//d: Vector with same length as the number of nodes. At the end of the algorithm the vector should contain the distance from the choosen starting
+//node to node i in the vector. If there is no route the value will be INF.
+//p: At the end of the algorithm the vector should contain at index i, the node which is the previous in the shortest path including that node.
 void dijkstra(int s, vector<int> & d, vector<int> & p){
-    //Vektorerna D och P ska även skickas in.
+
     int n = adj.size();
     d.assign(n, INF);
     p.assign(n, -1);
@@ -86,10 +89,8 @@ cout.tie(NULL);
 cin >> N >> M >> Q >> S;
 
 while((N != 0) && (Q != 0)){
-    adj.assign(N, vector<pair<int, int>>());
-    edges.clear();
     //N and Q are only 0 at the terminate row.
-
+    adj.assign(N, vector<pair<int, int>>());
     for (int i=0; i < M; i++){
         cin >> from >> to >> weight;
         adj[from].push_back(make_pair(to, weight));
@@ -115,6 +116,5 @@ while((N != 0) && (Q != 0)){
     cout << "\n";
     cin >> N >> M >> Q >> S;
 }
-
 return 0;
 }

@@ -27,6 +27,7 @@ int cost = 0;
 vector<int> parent;
 vector<int> rankvec;
 vector<tuple<long int, long int, long int>> edges = {};
+vector<pair<long int, long int>> edgesInTree = {};
 
 
 //The find, combine, same and DisjointSet function togeter make the union-find problem. Im reusing the code here to search for
@@ -109,7 +110,7 @@ while(cin >> n >> m){
         cin >> u >> v >> w;
         edges.push_back(make_tuple(w, min(u, v), max(u,v)));
     }
-    vector<pair<long int, long int>> edgesInTree = Kruskal(edges);
+    edgesInTree = Kruskal(edges);
     if (edgesInTree.size() == (n-1)){
         cout << cost << "\n";
         for(int i = 0; i<edgesInTree.size(); i++){
