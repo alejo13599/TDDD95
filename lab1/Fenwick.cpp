@@ -20,26 +20,31 @@ char oper;
 long update;
 long delta;
 long idx;
+long idx1;
+long idx2;
 
 //Taking index as an input and returning the sum up to that number. Aka caluculating the prefix sum, last index not inclusive.
-long number_sum(long idx){
-    long summa = 0;
-    while(idx > 0){
-        summa += fenwicktree[idx];
-        idx -= idx & (-idx);
+long long number_sum(long long idx){
+    long long summa = 0;
+    for(;idx > 0; idx &= idx-1){
+        summa += fenwicktree[idx-1];
+        
     }
     return summa;
 }
 
 //Taking two integer as input. The first represents an index an the secind a number. The function ads the number to every succeding index.
- void add(long update, long delta){
-    update = update + 1;
-    while(update <= N){
+ void add(long long update, long long delta){
+    for(; update< N; update|=(update+1)){
         fenwicktree[update] = fenwicktree[update] + delta;
-        update += update & (-update);
 
     }
  }
+//Range sum operation. (not between 0 and id.)
+long long  range_sum(long long idx1, long long idx2){
+    return number_sum(idx2+1) - number_sum(idx1);
+}
+
 
 int main() 
 {
@@ -67,6 +72,11 @@ for(long long int j=0; j<Q; j++){
     if (oper == '?'){
         cin >> idx;
         cout << number_sum(idx) << '\n';
+    }
+    
+    if (oper == 'R'){
+        cin >> idx1 >> idx2;
+        cout << range_sum(idx1, idx2) << '\n';
     }
 }
 
