@@ -1,10 +1,9 @@
 // Author: Alexander Josefsson
 // Liuid: Alejo135
-// Problem is: Shortest Path between two edges in a graph.
+// Problem is: Shortest Path between two edges in a graph usin the Bellman-Ford algortitm
 // Time-complexity: The Time-complexity is O(mlogn) where m is the edges and n is the vertices.
 // Memory-complexity: O(N) since it saves vectors of length N.
-// Note: Can only handle edges with postive weights where all edges can be traversed all the time.
-
+// Note: Can handle edges with postive and negative weights but only where all edges can be traversed all the time.
 
 #include <iostream>
 #include <iomanip>
@@ -14,68 +13,57 @@
 
 using namespace std;
 const int INF = 1000000000;
-vector<vector<pair<int, int>>> adj;
 int N; //Number of nodes in graph.
 int M; //Number of edges.
 int Q; //Number of queries
 int S; //Starting Node
-int from;
-int to;
-int weight;
 int distTo;
-vector<int> d;
+vector<int> distances;
 vector<int> p;
 vector<int> restoredPath = {};
+queue<int> negativeCycles = {};
 
 struct edge{
-    int a, b, cost;
-
+    int from, to, weight;
 };
 
 vector<edge> edges;
 
 void bellman_ford(){ 
-    d.assign(N, INF);
-    p.assign(N, - 1);
-    d[S] = 0;
-    int x;
-    for(int i=0; i<N; ++i){
-        x = -1;
+    distances.assign(N, INF);
+    p.assign(N, -1);
+    distances[S] = 0;
+
+    for(int i=0; i<N-1; ++i){
         for(int j=0; j<M; ++j) {
-            //cout << edges[j].a << " " << edges[j].b << " " << edges[j].cost << endl;
-            if(d[edges[j].a] < INF){
-                if(d[edges[j].b] > d[edges[j].a] + edges[j].cost){
-                    d[edges[j].b] = max(-INF, d[edges[j].a] + edges[j].cost); 
-                    p[edges[j].b] = edges[j].a;
-                    x = edges[j].b;
+            if(distances[edges[j].from] < INF){
+                if(distances[edges[j].to] > distances[edges[j].from] + edges[j].weight){
+                    distances[edges[j].to] = max(-INF, distances[edges[j].from] + edges[j].weight); 
+                    p[edges[j].to] = edges[j].from;
                 }
             }
         }
-
     }
 
-    if(x == -1){
-
+    for(int i=0; i<M; i++){
+        if(distances[edges[i].to] > distances[edges[i].from] + edges[i].weight && (distances[edges[i].from] < INF)){
+            negativeCycles.emplace(edges[i].from);
+            negativeCycles.emplace(edges[i].to);
+            distances[edges[i].from] = -INF;
+            distances[edges[i].to] = -INF;
+        }
     }
-    else{
-        int y = x;
-        for(int i=0; i<N; ++i){
-            y = p[y];
-        }
-        vector<int> path;
-        for(int cur =y;; cur=p[cur]){
-            path.push_back(cur);
-            if(cur == y && path.size() > 1){
-                break;
-            }
 
-        }
-        reverse(path.begin(),path.end());
-        for (size_t i=0; i<path.size(); ++i){
-            d[i] = -INF;
-            //cout << path[i] << ' ';
-        }
+    while(!negativeCycles.empty()){
+        int negative = negativeCycles.front();
+        negativeCycles.pop();
 
+        for(int i=0; i<edges.size(); ++i){
+            if(negative == edges[i].from && distances[edges[i].to] != -INF){
+                distances[edges[i].to] = -INF;
+                negativeCycles.emplace(edges[i].to);   
+           } 
+        }
     }
     edges.clear();
 }
@@ -85,20 +73,24 @@ int main()
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
 cout.tie(NULL);
-cin >> N >> M >> Q >> S;
 
-while((N != 0) && (Q != 0)){
+while(cin >> N >> M >> Q >> S){
+    int from;
+    int to;
+    int weight;
+    if((N+M+Q+S) == 0){break;}
+
     //N and Q are only 0 at the terminate row.
     for (int i=0; i < M; i++){
         cin >> from >> to >> weight;
         struct edge aEdge = {from, to, weight};
         edges.push_back(aEdge);
     }
-
+    
     bellman_ford();
     for (int i=0; i < Q; i++){
         cin >> distTo;
-        int len = d[distTo];
+        int len = distances[distTo];
         if(len == INF){
             cout << "Impossible" << endl;   
         }
@@ -115,7 +107,6 @@ while((N != 0) && (Q != 0)){
         } 
     }
     cout << "\n";
-    cin >> N >> M >> Q >> S;
 }
 return 0;
 }
