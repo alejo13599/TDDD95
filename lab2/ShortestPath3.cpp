@@ -1,7 +1,8 @@
 // Author: Alexander Josefsson
 // Liuid: Alejo135
 // Problem is: Shortest Path between two edges in a graph usin the Bellman-Ford algortitm
-// Time-complexity: The Time-complexity is O(mlogn) where m is the edges and n is the vertices.
+// Time-complexity: The Time-complexity is O(M*N) where M is the edges and N is the vertices. This due to the 
+                //algorithm going through every edge number of node times.
 // Memory-complexity: O(N) since it saves vectors of length N.
 // Note: Can handle edges with postive and negative weights but only where all edges can be traversed all the time.
 
@@ -20,8 +21,8 @@ int S; //Starting Node
 int distTo;
 vector<int> distances;
 vector<int> p;
-vector<int> restoredPath = {};
-queue<int> negativeCycles = {};
+vector<int> restoredPath = {}; //Vector containg the restored shortest path betwee 2 nodes.
+queue<int> negativeCycles = {}; //A queue for saving which nodes in negative cycles.
 
 struct edge{
     int from, to, weight;
@@ -29,11 +30,14 @@ struct edge{
 
 vector<edge> edges;
 
+//The function runs the Bellman Ford algoritm on a graph to find the shortest path from a node to every other node.
 void bellman_ford(){ 
     distances.assign(N, INF);
     p.assign(N, -1);
     distances[S] = 0;
 
+    //The for loops below go through the edges a totaal of N(number of nodes times). It is divided in two for loops so we see which nodes 
+    //are changed in the last step since we know these are in a negative cycle.
     for(int i=0; i<N-1; ++i){
         for(int j=0; j<M; ++j) {
             if(distances[edges[j].from] < INF){
@@ -44,7 +48,6 @@ void bellman_ford(){
             }
         }
     }
-
     for(int i=0; i<M; i++){
         if(distances[edges[i].to] > distances[edges[i].from] + edges[i].weight && (distances[edges[i].from] < INF)){
             negativeCycles.emplace(edges[i].from);
@@ -53,7 +56,7 @@ void bellman_ford(){
             distances[edges[i].to] = -INF;
         }
     }
-
+    //Goes through a queue consisting of nodes in negative cycles and sets every node affected by them to -INF.
     while(!negativeCycles.empty()){
         int negative = negativeCycles.front();
         negativeCycles.pop();
@@ -68,6 +71,21 @@ void bellman_ford(){
     edges.clear();
 }
 
+//Function to restore the shortest path. Takes 3 inputs.
+//int s: The starting node
+//int t The goal node
+//vector<int> const& p.
+//Returns a vector of ints containing the shortest path from s to t. 
+vector<int> restore_path(int s, int t, vector<int> const& p){
+    vector<int> path;
+    for (int v = t; v != s; v=p[v]){
+        path.push_back(v);
+    }
+    path.push_back(s);
+    reverse(path.begin(), path.end());
+    return path;
+}
+
 int main() 
 {
 ios_base::sync_with_stdio(false);
@@ -75,9 +93,8 @@ cin.tie(NULL);
 cout.tie(NULL);
 
 while(cin >> N >> M >> Q >> S){
-    int from;
-    int to;
-    int weight;
+    int from, to, weight;
+
     if((N+M+Q+S) == 0){break;}
 
     //N and Q are only 0 at the terminate row.
@@ -95,15 +112,16 @@ while(cin >> N >> M >> Q >> S){
             cout << "Impossible" << endl;   
         }
         else if(len == -INF){
-            cout << "-Infinity" << endl;  
+            cout << "-Infinity" << endl;
         }
         else{      
             cout << len << endl;
             //Code to restore the shortest path
             // restoredPath = restore_path(S,distTo,p);
             // for (int j=0; j < restoredPath.size(); j++){
-            // cout << restoredPath [j] << " ";
+            //     cout << restoredPath [j] << " ";
             // }
+            //cout << "\n";
         } 
     }
     cout << "\n";

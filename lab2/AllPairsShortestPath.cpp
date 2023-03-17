@@ -1,9 +1,8 @@
 // Author: Alexander Josefsson
 // Liuid: Alejo135
-// Problem is: 
-// Time-complexity: 
-// Memory-complexity: 
-// Note: 
+// Problem is: All pairs shortest path. To find the shortest path betwwen all pairs of nodes in a grapp.
+// Time-complexity: O(N^3) since we have a triple nested for-loop which each is iterated through N-times.S
+// Memory-complexity: O(N*N) since we save a vector of N vectors where each vector is N long.
 
 #include <iostream>
 #include <iomanip>
@@ -25,7 +24,8 @@ int distTo;
 vector<int> p;
 vector<vector<int>> d;
 
-
+//Takes a vector of vectors of size N*N as input. 
+//After the algorithm has been run, vector i contains the distances from vector i to every other node, the diagonal will by default be 0.
 void floydWarshall(vector<vector<int>> &d){
     //cout << "HEJ" << endl;
     //int n = d.size();
