@@ -23,9 +23,12 @@ int main() {
     for(int i=0; i<NumberOfCases; i++)
     {
     cin >> variables >> clauses;
-    cout << variables << clauses << endl;
+    //cout << variables << clauses << endl;
         for(int j=0; j<=clauses; j++){
             getline(cin, text);
+
+
+            while(text.find(" v "));
             cout << text << endl;
         }
     //cout << endl;
