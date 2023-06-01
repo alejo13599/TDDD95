@@ -19,17 +19,22 @@ int main() {
     cout.tie(NULL);
 
     cin >> NumberOfCases;
-
+    cout << NumberOfCases << endl;
     for(int i=0; i<NumberOfCases; i++)
     {
     cin >> variables >> clauses;
+    //cout << variables << clauses;
     //cout << variables << clauses << endl;
         for(int j=0; j<=clauses; j++){
             getline(cin, text);
-
-
-            while(text.find(" v "));
-            cout << text << endl;
+            string part;
+            stringstream ss(text);
+            while(getline(ss, part, ' ')){
+                if(part != "v"){
+                    cout << part << " ";
+                }
+            }
+        cout << endl;
         }
     //cout << endl;
     }

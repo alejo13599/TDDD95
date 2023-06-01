@@ -1,7 +1,7 @@
 // Author: Alexander Josefsson
 // Liuid: Alejo135
-// Problem is: Find the area of a polygon given the cooridnates of its corners,
-// Time-complexity: O(N) since it goes trough all points once.
+// Problem is:
+// Time-complexity: 
 // Memory-complexity:
 // Note: 
 #include <iostream>
@@ -20,11 +20,11 @@ public:
     point(double _x, double _y) : x(_x), y(_y) {}
 
     // add and subtract vectors
-    point operator+(const point &other) const { //Addition
+    point operator+(const point &other) const {
       return point(x + other.x, y + other.y);
     }
 
-    point operator-(const point &other) const { //Subtraction
+    point operator-(const point &other) const {
       return point(x - other.x, y - other.y);
     }
 
@@ -40,17 +40,14 @@ public:
   double dotproduct(point &point1, point &point2){
       return point1.x*point2.x + point1.y*point2.y;
     }
-  // Computes the distance between two points.
   double point_distance(point &point1, point &point2){
       return sqrt((point1.x-point2.x)*(point1.x-point2.x)+(point1.y-point2.y)*(point1.y-point2.y));
   }
-  //Computes the 2-dimensional cross product(detrimnant) of two points.
   double crossproduct(point &point1, point &point2){
       return point1.x*point2.y - point1.y*point2.x;
     }
   
 };
-//Takes of vector of points as input and computes the area using the crossproduct, then returns the area.
 double checkarea(vector<Pointclass::point> Pointvec){
   Pointclass inst;
   double area = 0;
@@ -79,7 +76,6 @@ while(NumberOfVertices){
   }
     double area = checkarea(Pointvec);
     cout << fixed;
-    //By checking if the area is positive or negative it determines wheter the points was given in Clockwise order.
     if(area < 0){
         cout << "CW " << setprecision(1) << -area << "\n";
     }

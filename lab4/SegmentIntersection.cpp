@@ -1,7 +1,7 @@
 // Author: Alexander Josefsson
 // Liuid: Alejo135
-// Problem is:
-// Time-complexity: 
+// Problem is: Checking wheter two given lines intersect and where they intersect.
+// Time-complexity: O(N) since it goes through the points once.
 // Memory-complexity:
 // Note: 
 #include <iostream>
@@ -17,38 +17,36 @@ public:
   struct point {
     double x, y;
 
-    // constructor
     point(double _x, double _y) : x(_x), y(_y) {}
 
     // add and subtract vectors
-    point operator+(const point &other) const {
+    point operator+(const point &other) const { //Addition
       return point(x + other.x, y + other.y);
     }
-
-    point operator-(const point &other) const {
+    point operator-(const point &other) const { //Subtraction
       return point(x - other.x, y - other.y);
     }
-
     point operator*(double K) const { //Scalar multiplication
       return point(K*x, K*y);
     }
-
     point operator/(double K) const { //Scalar division
       return point(x/K, y/K);
     }
-
   };
+
   double dotproduct(point &point1, point &point2){
       return point1.x*point2.x + point1.y*point2.y;
     }
+  // Computes the distance between two points.
   double point_distance(point &point1, point &point2){
       return (point1.x-point2.x)*(point1.x-point2.x)+(point1.y-point2.y)*(point1.y-point2.y);
   }
+  //Computes the 2-dimensional cross product(detrimnant) of two points.
   double crossproduct(point &point1, point &point2){
       return point1.x*point2.y - point1.y*point2.x;
     }
-  
 };
+//Takes of vector of points as input and computes the area using the crossproduct, then returns the area.
 double checkarea(vector<Pointclass::point> Pointvec){
   Pointclass inst;
   double area = 0;
@@ -59,22 +57,25 @@ double checkarea(vector<Pointclass::point> Pointvec){
   area = area/2;
   return area;
 }
+//Takes 3 points as input. Calculate wheter they are colinear, clockwise or counterclockwise. Returns a int depending on which case it is.
 int checkdirection(Pointclass::point a, Pointclass::point b, Pointclass::point c){
     int direction;
     vector<Pointclass::point> checkdirectionvector;
     checkdirectionvector.push_back(a);
     checkdirectionvector.push_back(b);
     checkdirectionvector.push_back(c);
-    if(checkarea(checkdirectionvector) < 0){
+    if(checkarea(checkdirectionvector) < 0){ //Counter Clockwise
         direction = -1;
-    }else if(checkarea(checkdirectionvector) == 0) {
+    }else if(checkarea(checkdirectionvector) == 0) { //Colinear
         direction = 0;
     }
-    else{
+    else{ //Clockwise
         direction = 1;
     }
     return direction;
 }
+//Takes 4 points as input. a and b are start and end of the first line, c and d are start and end of the second line. Calculates where the two lines
+//intersect and returns the coordinates as a point.
 Pointclass::point findintersection(Pointclass::point a, Pointclass::point b, Pointclass::point c, Pointclass::point d){
   double eq1 = b.y - a.y;
   double eq2 = a.x - b.x;
@@ -90,7 +91,8 @@ Pointclass::point findintersection(Pointclass::point a, Pointclass::point b, Poi
   double coord_y = (eq1*eq6 - eq4*eq3)/det;
   return {coord_x,coord_y};
 
-} 
+}
+//Given 3 points. Checks wheter b lies on the line between a and c
 bool checkonline(Pointclass::point a, Pointclass::point b, Pointclass::point c){
   if(b.x <= max(a.x, c.x) && b.x >= min(a.x, c.x) && b.y <= max(a.y, c.y) && b.y >= min(a.y, c.y)){
     return true;
@@ -101,10 +103,10 @@ double checksign(double NumberToCheck){
   if(abs(NumberToCheck) <= delta){
     NumberToCheck = abs(NumberToCheck);
   }
-  cout << fixed;
-  cout << setprecision(2);
+  cout << fixed << setprecision(2);
   return NumberToCheck;
 }
+//If the lines intersect as a segment. Makes sure the lowest x-point is print first.
 void findleftandright(Pointclass::point a, Pointclass::point b){
   if(a.x == b.x && a.y == b.y){
     cout << a.x << " " << a.y << endl;
@@ -117,6 +119,7 @@ void findleftandright(Pointclass::point a, Pointclass::point b){
     cout << b.x << " " << b.y << " " << a.x << " " << a.y << endl;         
   }
 }
+//Checks if the lines intersect. Push the points where it intersect into a vector. If there is more one element in the vector, the lines intersect as a segment.
 int checkintersection(Pointclass::point a, Pointclass::point b, Pointclass::point c, Pointclass::point d){
     vector<Pointclass::point> Pointvec = {};
     int intersect = 0;
@@ -129,7 +132,7 @@ int checkintersection(Pointclass::point a, Pointclass::point b, Pointclass::poin
         intersect = 1;
         return intersect;
     }
-    Pointclass::point minpoint={11000,11000}, maxpoint={-11000,-11000};
+    Pointclass::point minpoint={0,0}, maxpoint={0,0};
     if (direction1 == 0 && checkonline(a, c, b)){
       Pointvec.push_back({c.x,c.y});
       online = true;

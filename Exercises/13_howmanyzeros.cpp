@@ -33,10 +33,12 @@ int main() {
     while((Lower != -1) && (Upper != -1)){
         if(Lower == 0){
             long int z = zeros(Upper)+1;
-            printf("%lu\n", z);
+            //printf("%lu\n", z);
+            cout << z << "\n";
         }
         else{
-            printf("%lu\n", zeros(Upper)-zeros(Lower-1));           
+            //printf("%lu\n", zeros(Upper)-zeros(Lower-1)); 
+            cout << zeros(Upper)-zeros(Lower-1) << "\n";
         }
         cin >> Lower >> Upper;
     }
